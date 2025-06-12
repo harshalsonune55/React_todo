@@ -39,7 +39,7 @@ export default function Todo(){
 
 
     let [task,settask]=useState("");
-    let [tasktodo,settasktodo]=useState([{task:"do something", id:uuidv4(), isDone:false, atTime:{hours:time.hours,minutes:time.minutes,second:time.seconds} ,atDate:{day:Date.day,month:Date.month,year:Date.year}}]);
+    let [tasktodo,settasktodo]=useState([{task:"start", id:uuidv4(), isDone:false, atTime:{hours:0,minutes:0} ,atDate:{day:0,month:0,year:0}}]);
 
   
 function gettask(event){
@@ -107,7 +107,7 @@ let doneall=()=>{
                         task.isDone?<span><i className="fa-solid fa-check" style={{color:"green"}}></i></span>:<i className="fa-solid fa-xmark" style={{color:"red"}}></i>
                     }&nbsp; &nbsp;<span style={task.isDone ? { textDecoration: "line-through" } : {}}>{task.task}</span>&nbsp; &nbsp; 
                     &nbsp; &nbsp; &nbsp; &nbsp; <span>{task.atDate.day}/{task.atDate.month}/{task.atDate.year}</span> &nbsp; &nbsp; &nbsp; &nbsp;
-                    <span>{task.atTime.hours}:{task.atTime.minutes}:{task.atTime.second}</span>&nbsp; &nbsp;
+                    <span>{task.atTime.hours}:{task.atTime.minutes}</span>&nbsp; &nbsp;
                     <span><button onClick={()=>deletetask(task.id)}>delete</button></span>&nbsp; &nbsp;
                     <span><button onClick={()=>donetask(task.id)}>Done</button></span>
                     </li>
