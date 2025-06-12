@@ -102,14 +102,14 @@ let doneall=()=>{
         <ul>
             {
                 tasktodo.map((task)=>(
-                    <li key={task.id}>
+                    <li key={task.id} style={{ listStyleType: 'none' ,border:"1px solid white", borderRadius:"15px"}}>
                     {
                         task.isDone?<span><i className="fa-solid fa-check" style={{color:"green"}}></i></span>:<i className="fa-solid fa-xmark" style={{color:"red"}}></i>
                     }&nbsp; &nbsp;<span style={task.isDone ? { textDecoration: "line-through" } : {}}>{task.task}</span>&nbsp; &nbsp; 
                     &nbsp; &nbsp; &nbsp; &nbsp; <span>{task.atDate.day}/{task.atDate.month}/{task.atDate.year}</span> &nbsp; &nbsp; &nbsp; &nbsp;
                     <span>{task.atTime.hours}:{task.atTime.minutes}</span>&nbsp; &nbsp;
-                    <span><button onClick={()=>deletetask(task.id)}>delete</button></span>&nbsp; &nbsp;
-                    <span><button onClick={()=>donetask(task.id)}>Done</button></span>
+                    <span><button onClick={()=>deletetask(task.id)} style={{ borderRadius:"15px",border:"0.5px"}}>delete</button></span>&nbsp; &nbsp;
+                    <span><button onClick={()=>donetask(task.id)} style={{ borderRadius:"15px",border:"0.5px"}}>Done</button></span>
                     </li>
                 ))
             }
