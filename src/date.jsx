@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import Todo from "./todo.jsx";
 
 export default function Date() {
@@ -16,7 +16,7 @@ export default function Date() {
 
      useEffect(()=>{
         gettime();
-        const interval = setInterval(gettime, 1000); 
+        const interval = setInterval(gettime, 2); 
         return () => clearInterval(interval); 
      },[time]);
 
@@ -28,7 +28,7 @@ export default function Date() {
      }
      useEffect(()=>{
         getDate();
-        const interval = setInterval(getDate, 3600*24); 
+        const interval = setInterval(getDate, 3600000*24); 
         return () => clearInterval(interval); 
      },[Date]);
 
