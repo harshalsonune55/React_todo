@@ -102,7 +102,7 @@ let doneall=()=>{
         <ul>
             {
                 tasktodo.map((task)=>(
-                    <li key={task.id} style={{ listStyleType: 'none' ,border:"1px solid white", borderRadius:"15px"}}>
+                    <li key={task.id} style={{ listStyleType: 'none'}}>
                     {
                         task.isDone?<span><i className="fa-solid fa-check" style={{color:"green"}}></i></span>:<i className="fa-solid fa-xmark" style={{color:"red"}}></i>
                     }&nbsp; &nbsp;<span style={task.isDone ? { textDecoration: "line-through" } : {}}>{task.task}</span>&nbsp; &nbsp; 
