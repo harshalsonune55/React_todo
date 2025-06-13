@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 export default function Todo(){
 
 //date and time
+// definig the state variable uaing the Use state that deflects the time in the todo app
 
     let[time,settime]=useState({});  
     let[Date,setDate]=useState({});    
@@ -22,74 +23,93 @@ export default function Todo(){
         setDate({day:Jsonres.day,month:Jsonres.month,year:Jsonres.year});
         
      }
+    
+// using the useEffect to render the time initially for the first time
      useEffect(() => {
         gettime();
-        const interval = setInterval(gettime, 1000);
+        const interval = setInterval(gettime, 100); //fetchig the current time using the above API
         return () => clearInterval(interval);
       }, []);
       
+//  using the useEffect to render the date initially for the first time
       useEffect(() => {
         getDate();
-        const interval = setInterval(getDate, 3600000*24); 
+        const interval = setInterval(getDate, 3600000*24); // here it is the miliseconds in one day
         return () => clearInterval(interval);
       }, []);
 
-     /////
-
-
 
     let [task,settask]=useState("");
-    let [tasktodo,settasktodo]=useState([{task:"start", id:uuidv4(), isDone:false, atTime:{hours:0,minutes:0} ,atDate:{day:0,month:0,year:0}}]);
+    // let [tasktodo,settasktodo]=useState([{task:"start", id:uuidv4(), isDone:false, atTime:{hours:0,minutes:0} ,atDate:{day:0,month:0,year:0}}]);
 
+//using the useReducer hook of the React.js
+const [tasktodo, dispatch] = useReducer(taskReducer, [
+    {
+      task: "start",
+      id: uuidv4(),
+      isDone: false,
+      atTime: { hours: 0, minutes: 0 },
+      atDate: { day: 0, month: 0, year: 0 }
+    }
+  ]);
+
+// calling the useReducer using the dispatch
+  function save_task() {
+    dispatch({
+      type: "ADD_TASK",
+      payload: {
+        task: task,
+        time: time,
+        date: Date
+      }
+    });
+    settask("");
+  }
+  
+  function deletetask(id) {
+    dispatch({ type: "DELETE_TASK", payload: { id } });
+  }
+
+  function donetask(id) {
+    dispatch({ type: "done", payload: { id } });
+  }
+
+  function doneall() {
+    dispatch({ type: "ALL_DONE" });
+  }
+  
+
+//defining the reducer function
+function taskReducer(state, action) {
+    switch (action.type) {
+      case "ADD_TASK":
+        return [
+          ...state,
+          {
+            task: action.payload.task,
+            id: uuidv4(),
+            isDone: false,
+            atTime: action.payload.time,
+            atDate: action.payload.date
+          }
+        ];
+      case "DELETE_TASK":
+        return state.filter((todo) => todo.id !== action.payload.id);
+      case "done":
+        return state.map((todo) =>
+          todo.id === action.payload.id ? { ...todo, isDone: true } : todo
+        );
+      case "ALL_DONE":
+        return state.map((todo) => ({ ...todo, isDone: true }));
+      default:
+        return state;
+    }
+  }
+  
   
 function gettask(event){
 settask(event.target.value);
 console.log(task);
-}
-
-function save_task(){
-    // settasktodo([...tasktodo,{task:task,id:uuidv4()}]);
-    settasktodo([
-        ...tasktodo,
-        {
-          task: task,
-          id: uuidv4(),
-          isDone: false,
-          atTime: time,
-          atDate: Date
-        }
-      ]);
-    settask("");
-}
-
-function deletetask(id){
-settasktodo(tasktodo.filter((todo)=> todo.id!=id));
-}
-
-let donetask=(id)=>{
-    settasktodo((prevtask)=>{
-        return prevtask.map((todo)=>{
-            if(todo.id===id){
-                return{
-                    ...todo,
-                    isDone:true,
-                }
-            }else{
-                return todo;
-            }
-        })
-    });
-}
-
-let doneall=()=>{
-    settasktodo((prevtask)=>{
-        return prevtask.map((todo)=>{
-                return{
-                    ...todo,
-                    isDone:true,
-                }
-        })
-    });
 }
     return (
         <>
