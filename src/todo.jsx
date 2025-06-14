@@ -1,13 +1,16 @@
-import {useEffect,useReducer,useState} from "react";
+import {useEffect,useReducer,useState,useRef} from "react";
 import { v4 as uuidv4 } from 'uuid';
-
+import { TodoContext } from "./todoContext.jsx"; 
+import Date from "./date.jsx";
 export default function Todo(){
+
+
 
 //date and time
 // definig the state variable uaing the Use state that deflects the time in the todo app
 
     let[time,settime]=useState({});  
-    let[Date,setDate]=useState({});    
+    let[Date_,setDate_]=useState({});    
 
     const URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLifG-lscjZfNzmWuqwDVBj9aVcU3Z-74eu0QrHRhn6omrApSyFKPpdn_1IPtyHLOMDIWAmGl9mVwjK51nsFC6s1qJ_yaKa0eDrC3_U_5BXgufIXdw40u5Z2SOcjYq_2AITC4qfx_rTybapW3Pe03c-bsyXuCjvjXcq6NLca5k-S7p2MIY7qphSow7Gh7Z4OrVaYVJXIlMxll6h7tT8aHtf1GtNThKdqvwOSciYPU7NgC20EZ32VwrKWFzLviba59TQmQp9867IbCOjw-MK5zykBzRq5YA&lib=MwxUjRcLr2qLlnVOLh12wSNkqcO1Ikdrk";
     let gettime=async()=>{
@@ -20,7 +23,7 @@ export default function Todo(){
      let getDate=async()=>{
         let response= await fetch(URL);
         let Jsonres=await response.json();
-        setDate({day:Jsonres.day,month:Jsonres.month,year:Jsonres.year});
+        setDate_({day:Jsonres.day,month:Jsonres.month,year:Jsonres.year});
         
      }
     
@@ -39,7 +42,7 @@ export default function Todo(){
       }, []);
 
 
-    let [task,settask]=useState("");
+  let [task,settask]=useState("");
     // let [tasktodo,settasktodo]=useState([{task:"start", id:uuidv4(), isDone:false, atTime:{hours:0,minutes:0} ,atDate:{day:0,month:0,year:0}}]);
 
 //using the useReducer hook of the React.js
@@ -60,7 +63,7 @@ const [tasktodo, dispatch] = useReducer(taskReducer, [
       payload: {
         task: task,
         time: time,
-        date: Date
+        date: Date_
       }
     });
     settask("");
@@ -78,6 +81,19 @@ const [tasktodo, dispatch] = useReducer(taskReducer, [
     dispatch({ type: "ALL_DONE" });
   }
   
+//defining the variable that defines the task is being added using useref
+const prevTaskCount = useRef(tasktodo.length);
+
+// prints the task is being added if there is a rerendering in the tasktodo list
+useEffect(() => {
+  if (prevTaskCount.current < tasktodo.length) {
+    console.log("Task Added");
+  }
+  if (prevTaskCount.current > tasktodo.length) {
+    console.log("Task Removed");
+  }
+  prevTaskCount.current = tasktodo.length;
+}, [tasktodo]);
 
 //defining the reducer function
 function taskReducer(state, action) {
@@ -113,6 +129,11 @@ console.log(task);
 }
     return (
         <>
+      <TodoContext.Provider value={{
+      time,
+      Date_,
+    }}>
+      <Date/>
         <h1>To-Do App!</h1>
         <input placeholder="enter your task" value={task} onChange={gettask}/>
         &nbsp; &nbsp;
@@ -135,6 +156,7 @@ console.log(task);
             }
         </ul>
         <button onClick={doneall}>Done All</button>
+        </TodoContext.Provider>
         </>
     );
 }
