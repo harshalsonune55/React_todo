@@ -1,6 +1,7 @@
-import './App.css'
-import Date from"./date.jsx";
+import './App.css';
 import Todo from './todo.jsx';
+import {Provider} from "react-redux";
+import {store} from "./app/store.js"
 
 
 
@@ -9,7 +10,10 @@ function App() {
 
   return (
     <>
-         <Todo/>
+    <Provider store={store}>
+    <Todo/>
+    </Provider>
+
     </>
 
   );
